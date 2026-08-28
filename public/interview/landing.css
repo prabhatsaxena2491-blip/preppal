@@ -1,0 +1,357 @@
+/* ==========================================================================
+   PrepPal — static landing & About pages
+   Mirrors the app's soothing dual theme (light / dark) so every page feels
+   like one product. Dark mode is auto-detected via prefers-color-scheme;
+   the variables match interview.css exactly.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Soothing LIGHT palette ---- */
+  --bg: #f6f4ef;
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-soft: #fbfaf7;
+  --bg-input: #ffffff;
+  --border: #e7e2d6;
+  --border-strong: #d4cdbd;
+
+  --text: #2f3a35;
+  --text-dim: #5f6b64;
+  --text-faint: #8d988f;
+
+  /* calm sage + soft lavender accents */
+  --accent: #6a9b6f;
+  --accent-strong: #55855b;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(106, 155, 111, 0.12);
+  --accent-line: rgba(106, 155, 111, 0.35);
+  --accent-tint: #eef4ef;
+
+  --lav: #9a8fc0;
+  --lav-soft: rgba(154, 143, 192, 0.14);
+
+  --shadow-soft: 0 1px 2px rgba(47, 58, 53, 0.04), 0 14px 34px rgba(47, 58, 53, 0.08);
+  --shadow-deep: 0 24px 70px rgba(47, 58, 53, 0.16);
+
+  --radius: 10px;
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Dark palette applies when the OS prefers dark (default, no explicit choice),
+   or when the visitor toggles dark on manually. data-theme="light" always wins
+   over the OS so a manual light choice is respected. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #151a17;
+  --bg-elevated: #1d2420;
+  --bg-card: #1d2420;
+  --bg-soft: #18201c;
+  --bg-input: #202823;
+  --border: #2a342e;
+  --border-strong: #3a463f;
+
+  --text: #dfe6e0;
+  --text-dim: #a5b1a8;
+  --text-faint: #76837a;
+
+  --accent: #7fae86;
+  --accent-strong: #93c09a;
+  --accent-ink: #132218;
+  --accent-soft: rgba(127, 174, 134, 0.16);
+  --accent-line: rgba(127, 174, 134, 0.4);
+  --accent-tint: #22302a;
+
+  --lav: #a99ccf;
+  --lav-soft: rgba(169, 156, 207, 0.16);
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.4);
+  --shadow-deep: 0 24px 70px rgba(0, 0, 0, 0.55);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #151a17;
+    --bg-elevated: #1d2420;
+    --bg-card: #1d2420;
+    --bg-soft: #18201c;
+    --bg-input: #202823;
+    --border: #2a342e;
+    --border-strong: #3a463f;
+
+    --text: #dfe6e0;
+    --text-dim: #a5b1a8;
+    --text-faint: #76837a;
+
+    --accent: #7fae86;
+    --accent-strong: #93c09a;
+    --accent-ink: #132218;
+    --accent-soft: rgba(127, 174, 134, 0.16);
+    --accent-line: rgba(127, 174, 134, 0.4);
+    --accent-tint: #22302a;
+
+    --lav: #a99ccf;
+    --lav-soft: rgba(169, 156, 207, 0.16);
+
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.3), 0 14px 34px rgba(0, 0, 0, 0.4);
+    --shadow-deep: 0 24px 70px rgba(0, 0, 0, 0.55);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1000px 520px at 88% -8%, var(--accent-soft), transparent 62%),
+    radial-gradient(820px 420px at -12% 112%, var(--lav-soft), transparent 62%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+.site-nav {
+  flex: none;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+.brand {
+  display: block;
+  margin-right: 12px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: background-color 0.15s, color 0.15s;
+}
+.nav-link:hover {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+:root[data-theme="dark"] .site-nav {
+  background: rgba(29, 36, 32, 0.72);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-nav {
+    background: rgba(29, 36, 32, 0.72);
+  }
+}
+main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 64px;
+}
+h1 {
+  font-size: 34px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  color: var(--text);
+}
+h2 {
+  font-size: 22px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 40px 0 10px;
+  color: var(--text);
+}
+h3 {
+  font-size: 17px;
+  margin: 22px 0 4px;
+  color: var(--text);
+}
+.lede {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin: 0;
+}
+.who,
+section,
+.cta {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+.who {
+  font-size: 15px;
+  color: var(--text-dim);
+  padding: 12px 16px;
+}
+section,
+.cta {
+  padding: 22px 24px;
+  margin-top: 18px;
+}
+.topics {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.topics li {
+  margin-bottom: 6px;
+}
+.cta {
+  text-align: center;
+}
+.cta h2 {
+  margin-top: 0;
+}
+.button {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 13px 22px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--accent-ink);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px var(--accent-soft);
+}
+.button:hover {
+  filter: brightness(1.05);
+}
+.tags a {
+  display: inline-block;
+  margin: 4px 6px 4px 0;
+  padding: 6px 12px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.35s ease;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.grid section {
+  margin-top: 0;
+}
+.grid h3 {
+  margin-top: 0;
+}
+/* theme toggle (shared with the app) */
+.theme-toggle {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.15s, color 0.15s, transform 0.1s;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.theme-toggle:active {
+  transform: scale(0.96);
+}
+.theme-toggle .sun,
+.theme-toggle .moon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+}
+/* default (light) state: hide moon */
+:root:not([data-theme="dark"]) .theme-toggle .moon {
+  display: none;
+}
+/* forced dark via the toggle */
+:root[data-theme="dark"] .theme-toggle .sun {
+  display: none;
+}
+:root[data-theme="dark"] .theme-toggle .moon {
+  display: inline-flex;
+}
+/* OS prefers dark, when no explicit choice was made */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .theme-toggle .moon {
+    display: inline-flex;
+  }
+}
+.site-footer {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px 40px;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.site-footer .copyright {
+  margin: 8px 0 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+a {
+  color: var(--accent-strong);
+}
+.site-footer a:hover {
+  text-decoration: underline;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none;
+  }
+}
