@@ -22,7 +22,22 @@ const renderIndex = () => indexHtml.replaceAll('__PREPPAL_URL__', BASE);
 
 // The app index — served BEFORE static so the real domain is injected into the
 // canonical/og/ld+json tags (a hardcoded placeholder would mislead Google).
-app.get(['/interview', '/interview/index.html'], (_req, res) => {
+// Express is non-strict by default, so "/interview" also matches "/interview/".
+// We inspect originalUrl to avoid an infinite redirect loop.
+// Redirect /interview -> /interview/ so relative asset paths resolve correctly.
+app.get('/interview', (req, res) => {
+  if (req.originalUrl.startsWith('/interview/')) {
+    res.set('Cache-Control', 'no-store');
+    return res.type('html').send(renderIndex());
+  }
+  const qs = req.url.includes('?') ? `?${req.url.split('?').slice(1).join('?')}` : '';
+  return res.redirect(301, `/interview/${qs}`);
+});
+app.get('/interview/index.html', (_req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.type('html').send(renderIndex());
+});
+app.get('/interview/', (_req, res) => {
   res.set('Cache-Control', 'no-store');
   res.type('html').send(renderIndex());
 });
