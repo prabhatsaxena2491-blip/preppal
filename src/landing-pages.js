@@ -3,7 +3,7 @@
 // questions client-side and is not crawlable). Each page identifies a target
 // keyword (e.g. "Selenium interview questions") and links into the product.
 
-const BASE = process.env.PREPPAL_URL || 'https://preppal.app';
+const BASE = process.env.PREPPAL_URL || 'https://preppal-ai.com';
 
 // Per-track editorial copy: title, headline, keyword intro, and sample topics.
 const CONTENT = {

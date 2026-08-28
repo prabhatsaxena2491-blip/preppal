@@ -16,7 +16,7 @@ app.use(express.json({ limit: '200kb' }));
 
 // Single source of truth for the canonical domain. Landing/About/sitemap/robots
 // already read this; index.html is static so we inject it server-side here.
-const BASE = process.env.PREPPAL_URL || 'https://preppal.app';
+const BASE = process.env.PREPPAL_URL || 'https://preppal-ai.com';
 const indexHtml = fs.readFileSync(path.join(__dirname, 'public', 'interview', 'index.html'), 'utf8');
 const renderIndex = () => indexHtml.replaceAll('__PREPPAL_URL__', BASE);
 
